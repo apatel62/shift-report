@@ -1,0 +1,189 @@
+/*sets color styles */
+:root{
+  --text: #ffffff;
+  --primary: #4682B4; 
+  --secondary: #003366; 
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/*sets spacing between navbar and title*/
+.navbar-custom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--secondary);
+}
+
+h1 {
+  color: var(--text);
+}
+
+h2 {
+  color: var(--text);
+  margin-top: 20px;
+}
+
+h3, span {
+  color: var(--text);
+}
+
+h3{
+  font-style: italic;
+}
+
+body {
+  background-color: var(--primary);
+  background-size: 100vh;
+  text-align: center;
+}
+
+.form-check {
+  margin: 20px 50px;
+}
+
+.form-check-input {
+  transform: scale(2);
+}
+
+.form-check-label {
+  color: var(--text);
+  margin-left: 5px;
+  font-size: 20px;
+}
+
+
+.form-custom {
+  width: 50%;
+  margin: 0px auto;
+}
+
+
+#machine-option {
+  height: 48px;
+  font-size: 20px;
+}
+
+select {
+  cursor: pointer;
+}
+
+#parts-made {
+  height: 48px;
+}
+
+span{
+  font-size: 20px;
+}
+
+.form-custom-2 {
+  width: 50%;
+  margin: 15px auto;
+  margin-top: 10px;
+}
+
+/* !important insures that the style is always applied*/
+.btn-custom {
+  color: var(--text);
+  margin: 20px auto;
+  width: 50%;
+  box-shadow: var(--bs-box-shadow) !important;
+}
+
+.form-custom, .form-custom-1, .form-custom-2 {
+  box-shadow: var(--bs-box-shadow) !important;
+}
+
+/*hides options until chosen*/
+.machine, .up-down, .parts-produced, .comments-button {
+  display: none;
+}
+
+.issues {
+  display: none;
+}
+
+/*sets spacing between navbar and title*/
+.navbar-custom-1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--secondary);
+}
+
+.logoff{
+  flex: 30%;
+  color: var(--text);
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.logoff:hover {
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.table-custom{
+  width: 75%;
+  margin:30px auto;
+  margin-bottom: 40px;
+
+}
+
+.datepicker {
+  margin-top: 20px;
+  color: var(--text);
+}
+
+label[for="startDate"],  label[for="endDate"] {
+  font-size: 30px;
+}
+
+#startDate, #endDate {
+  height: 50%;
+}
+
+#table-title {
+  background-color: #3CB371;
+  color: var(--text);
+  border: 0px;
+}
+
+#table-header {
+  font-weight: bold;
+}
+
+canvas {
+  width: 75%;
+  height: 200px;
+  background-color: var(--text);
+}
+
+.filter-checkbox, .filter-by {
+  margin-top: 50px;
+}
+
+/*adjusts spacing and position in navbar depending on screen width*/
+  @media (max-width: 550px) {
+    .navbar-custom-1 {
+      flex-direction: column;
+    }
+  }
+
+  @media (min-width: 550px) and (max-width: 10000px) {
+    .logoff{
+      position: fixed;
+      top:15px;
+      right:10px;
+      color: var(--text);
+      font-size: 20px;
+      text-decoration: none;
+    }
+  }
