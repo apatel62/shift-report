@@ -5,10 +5,6 @@ interface ReportAttributes {
   id: number;
   shiftNumber: string;
   date: Date;
-  machine: string;
-  machineStatus: boolean; // machine up or down
-  partsMade: number;
-  comments?: string;
   assignedUserId?: number;
 }
 
@@ -21,14 +17,10 @@ export class Report
   public id!: number;
   public shiftNumber!: string;
   public date!: Date;
-  public machine!: string;
-  public machineStatus!: boolean;
-  public partsMade!: number;
-  public comments?: string;
   public assignedUserId!: number;
 
   // associated User model
-  public readonly associatedUser?: User;
+  public readonly assignedUser?: User;
 
   public readonly createdAt!: Date;
 }
@@ -48,22 +40,6 @@ export function ReportFactory(sequelize: Sequelize): typeof Report {
       date: {
         type: DataTypes.DATE,
         allowNull: false,
-      },
-      machine: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      machineStatus: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
-      partsMade: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      comments: {
-        type: DataTypes.STRING,
-        allowNull: true,
       },
       assignedUserId: {
         type: DataTypes.INTEGER,
