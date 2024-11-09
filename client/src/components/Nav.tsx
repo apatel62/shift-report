@@ -2,36 +2,37 @@ import { Link, useLocation } from "react-router-dom";
 
 const Nav = () => {
   const currentPage = useLocation().pathname;
-  // TODO: Add necessary code to display the navigation bar and link between the pages
+
+  const getTitle = () => {
+    if (currentPage === "/") {
+      return "Report";
+    } else if (currentPage === "/ShiftHistory") {
+      return "Report History";
+    } else {
+      return "Page Not Found";
+    }
+  };
+
   return (
-    <header className="navbar navbar-expand-md navbar-dark sticky-top navbar-custom-1">
-      <h1>Shift Report</h1>
-      <nav >
+    <header className="navbar navbar-expand-md navbar-dark sticky-top navbar-custom">
+      <nav className="navItem">
         <Link
           to="/"
-          // This is a conditional (ternary) operator that checks to see if the current page is "Home"
-          // If it is, we set the current page to 'active', otherwise we set it to '' or no class
-          className={
-            currentPage === "/"
-              ? "nav-item nav-link active"
-              : "nav-item nav-link"
-          }
+          className={currentPage === "/" ? "nav-link active" : "nav-link"}
         >
-          Shift Report
+          Home
         </Link>
         <Link
           to="/ShiftHistory"
-          // Check to see if the currentPage is `Portfolio`, and if so we use the active class. Otherwise, we set it to have no class
           className={
-            currentPage === "/ShiftHistory"
-              ? "nav-item nav-link active"
-              : "nav-item nav-link"
+            currentPage === "/ShiftHistory" ? "nav-link active" : "nav-link"
           }
         >
-          Shift Report History
+          History
         </Link>
-        <button className="logoff"> Logoff </button>
       </nav>
+      <h1 className="navbar-title">{getTitle()}</h1>
+      <button className="logoff">Logoff</button>
     </header>
   );
 };
