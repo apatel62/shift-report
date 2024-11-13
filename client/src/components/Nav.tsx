@@ -1,12 +1,33 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
+import auth from "../utils/auth";
 
 const Nav = () => {
   const currentPage = useLocation().pathname;
 
+  const [loginCheck, setLoginCheck] = useState(false);
+
+  const checkLogin = () => {
+    if (auth.loggedIn()) {
+      setLoginCheck(true);
+    }
+  };
+
+  useEffect(() => {
+    checkLogin();
+    console.log(`NavBar: ${loginCheck}`);
+  }, [loginCheck]);
+
+  const handleLogoffSubmit = () => {
+    auth.logout();
+  };
+
   const getTitle = () => {
-    if (currentPage === "/") {
+    if (!loginCheck) {
+      return "Login";
+    } else if (loginCheck && currentPage === "/") {
       return "Report";
-    } else if (currentPage === "/ShiftHistory") {
+    } else if (loginCheck && currentPage === "/ShiftHistory") {
       return "Report History";
     } else {
       return "Page Not Found";
@@ -25,14 +46,22 @@ const Nav = () => {
         <Link
           to="/ShiftHistory"
           className={
-            currentPage === "/ShiftHistory" ? "nav-link active" : "nav-link"
+            currentPage === "/ShiftHistory"
+              ? "nav-bottom nav-link active"
+              : "nav-bottom nav-link"
           }
         >
           History
         </Link>
       </nav>
       <h1 className="navbar-title">{getTitle()}</h1>
-      <button className="logoff">Logoff</button>
+      <button
+        className="logoff"
+        style={{ display: loginCheck ? "block" : "none" }}
+        onClick={handleLogoffSubmit}
+      >
+        Logoff
+      </button>
     </header>
   );
 };

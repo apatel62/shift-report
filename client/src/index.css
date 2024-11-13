@@ -16,7 +16,7 @@ h1 {
   color: var(--text);
 }
 
-h2 {
+h2, h4 {
   color: var(--text);
   margin-top: 20px;
 }
@@ -33,6 +33,20 @@ body {
   background-color: var(--primary);
   background-size: 100vh;
   text-align: center;
+}
+
+.login-notice {
+  /* Center the login form */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /*Vertically center */
+  height: 100vh;           /* Take up full viewport height */
+  width: 100%;             /* Make the div take up full width */
+  text-align: center;      /* Center text inside the div */
+}
+
+.login-form {
+  color: var(--text);
 }
 
 .form-check {
@@ -53,6 +67,24 @@ body {
 .form-custom {
   width: 50%;
   margin: 0px auto;
+}
+
+.form-custom-1 {
+  width: 25%;
+  margin: 0px auto;
+}
+
+.login-error{
+  color: maroon;
+  margin-top: 20px;
+  font-style: initial;
+}
+
+.btn-custom-1 {
+  color: var(--text);
+  margin: 20px auto;
+  width: 25%;
+  box-shadow: var(--bs-box-shadow) !important;
 }
 
 
@@ -86,6 +118,7 @@ span{
   width: 50%;
   box-shadow: var(--bs-box-shadow) !important;
 }
+
 
 .form-custom, .form-custom-1, .form-custom-2 {
   box-shadow: var(--bs-box-shadow) !important;
@@ -207,8 +240,6 @@ span{
 }
 
 
-
-
 .table-custom{
   width: 75%;
   margin:30px auto;
@@ -262,16 +293,27 @@ canvas {
 /*adjusts spacing and position in navbar depending on screen width*/
   @media (max-width: 768px) {
     .navbar-custom {
-      flex-direction: column;
       align-items: flex-start;
     }
     .navItem {
+      flex-direction: column;
+      align-items: flex-start;
       justify-content: flex-start;
+      margin-top: 0px;
+    }
+
+    .nav-bottom {
+      margin-top: 10px;
     }
   
     .logoff {
       position: static; 
       margin-top: 10px; 
+      margin-left: 20px;
+    }
+
+    .form-custom-1, .btn-custom-1 {
+      width: 60%;
     }
   }
 
