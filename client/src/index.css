@@ -30,8 +30,10 @@ h3{
 }
 
 body {
-  background-color: var(--primary);
-  background-size: 100vh;
+  background-image: linear-gradient(to right top, #787f21, #696217, #574711, #412f0c, #2a1a01);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   text-align: center;
 }
 
@@ -144,7 +146,7 @@ span{
   display: flex;
   justify-content: space-between; /* Ensure space between logoff button and navItem */
   align-items: center; /* Vertically center all elements */
-  background-color: var(--secondary);
+  /* background-color: var(--secondary); */
   color: var(--text);
   padding: 10px 20px;
   position: relative;
