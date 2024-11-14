@@ -2,6 +2,9 @@ import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 
 import { useOutletContext } from "react-router-dom";
 import { login } from "../api/authAPI";
+import { ReportData } from "../interfaces/ReportData";
+import { MachineData } from "../interfaces/MachineData";
+import { createReport, updateReport } from "../api/reportAPI";
 
 interface ModalContextType {
   showSuccessModal: boolean;
@@ -13,6 +16,24 @@ interface ModalContextType {
 import auth from "../utils/auth";
 
 const ShiftReport = () => {
+  const [newReport, setNewReport] = useState<ReportData | undefined>({
+    id: null,
+    shiftNumber: "",
+    date: null,
+    assignedUserId: null,
+    assignedUser: null,
+  });
+
+  const [newMachine, setNewMachine] = useState<MachineData | undefined>({
+    id: null,
+    machine: "",
+    machineStatus: "",
+    partsMade: null,
+    comments: null,
+    assignedReportId: null,
+    assignedReport: null,
+  });
+
   const [shiftValue, setShiftValue] = useState<number>(0);
   const [machineValue, setMachineValue] = useState<string>("");
   const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
@@ -40,6 +61,28 @@ const ShiftReport = () => {
 
   useEffect(() => {
     checkLogin();
+
+    const createNewReport = async () => {
+      if (newReport) {
+        await createReport(newReport);
+      }
+    };
+
+    if (loginCheck) {
+      setNewReport((prev) =>
+        prev
+          ? {
+              ...prev,
+              assignedUserId: Number.parseInt(
+                localStorage.getItem("userId") as string
+              ),
+              date: new Date(),
+            }
+          : undefined
+      );
+
+      createNewReport();
+    }
   }, []);
 
   const [loginData, setLoginData] = useState({
@@ -82,6 +125,9 @@ const ShiftReport = () => {
   const handleShiftChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedShift = Number(event.target.value);
     setShiftValue(selectedShift);
+    setNewReport((prev) =>
+      prev ? { ...prev, shiftNumber: selectedShift.toString() } : undefined
+    );
     if (selectedShift !== 0) {
       setIsMachineVisible(true);
     } else {
@@ -98,6 +144,8 @@ const ShiftReport = () => {
       "Machine 4",
       "Machine 5",
     ];
+
+    setNewMachine((prev) => (prev ? { ...prev, machine: value } : undefined));
 
     const isValidMachine = validMachineOptions.includes(value);
     setMachineValue(value);
@@ -141,6 +189,15 @@ const ShiftReport = () => {
       setPartsMade("");
       setIsComButVisible(false);
     }
+    if (isUpChecked) {
+      setNewMachine((prev) =>
+        prev ? { ...prev, machineStatus: "UP" } : undefined
+      );
+    } else {
+      setNewMachine((prev) =>
+        prev ? { ...prev, machineStatus: "DOWN" } : undefined
+      );
+    }
   }, [isUpChecked, isDownChecked, machineValue]);
 
   const handlePartsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,12 +208,20 @@ const ShiftReport = () => {
     } else {
       setIsComButVisible(true);
     }
+    setNewMachine((prev) =>
+      prev
+        ? { ...prev, partsMade: Number.parseInt(event.target.value) }
+        : undefined
+    );
   };
 
   const handleCommentsChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setComments(event.target.value);
+    setNewMachine((prev) =>
+      prev ? { ...prev, comments: event.target.value } : undefined
+    );
   };
 
   const handleSubmitPress = (event: React.MouseEvent<HTMLButtonElement>) => {
