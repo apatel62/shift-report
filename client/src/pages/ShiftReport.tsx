@@ -4,16 +4,28 @@ import { useOutletContext } from "react-router-dom";
 import { login } from "../api/authAPI";
 import { ReportData } from "../interfaces/ReportData";
 import { MachineData } from "../interfaces/MachineData";
-import { createReport, updateReport } from "../api/reportAPI";
+import { createReport, retrieveReports } from "../api/reportAPI";
+import auth from "../utils/auth";
+import { createMachine } from "../api/machineAPI";
 
 interface ModalContextType {
   showSuccessModal: boolean;
   showEmailModal: boolean;
   setShowSuccessModal: (value: boolean) => void;
   setShowEmailModal: (value: boolean) => void;
+  isUpChecked: boolean;
+  isDownChecked: boolean;
+  isUpDownVisible: boolean;
+  isPartsVisible: boolean;
+  isComButVisible: boolean;
+  setIsUpChecked: (value: boolean) => void;
+  setIsDownChecked: (value: boolean) => void;
+  setIsUpDownVisible: (value: boolean) => void;
+  setIsPartsVisible: (value: boolean) => void;
+  setIsComButVisible: (value: boolean) => void;
+  machineValue: string;
+  setMachineValue: (value: string) => void;
 }
-
-import auth from "../utils/auth";
 
 const ShiftReport = () => {
   const [newReport, setNewReport] = useState<ReportData | undefined>({
@@ -35,18 +47,35 @@ const ShiftReport = () => {
   });
 
   const [shiftValue, setShiftValue] = useState<number>(0);
-  const [machineValue, setMachineValue] = useState<string>("");
-  const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
-  const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
+  //const [machineValue, setMachineValue] = useState<string>("");
+  //const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
+  //const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
   const [partsMade, setPartsMade] = useState("");
   const [comments, setComments] = useState<string>("");
 
-  const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
-  const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
-  const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
-  const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
+  const [reportMade, setReportMade] = useState<boolean>(false);
+  const [currentReportId, setCurrentReportId] = useState<number>(0);
 
-  const { setShowSuccessModal } = useOutletContext<ModalContextType>();
+  const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
+  // const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
+  // const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
+  // const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
+
+  const {
+    isUpChecked,
+    isDownChecked,
+    isUpDownVisible,
+    isPartsVisible,
+    isComButVisible,
+    setIsUpChecked,
+    setIsDownChecked,
+    setIsUpDownVisible,
+    setIsPartsVisible,
+    setIsComButVisible,
+    setShowSuccessModal,
+    machineValue,
+    setMachineValue,
+  } = useOutletContext<ModalContextType>();
 
   const [loginCheck, setLoginCheck] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -61,14 +90,8 @@ const ShiftReport = () => {
 
   useEffect(() => {
     checkLogin();
-
-    const createNewReport = async () => {
-      if (newReport) {
-        await createReport(newReport);
-      }
-    };
-
     if (loginCheck) {
+      setReportMade(false);
       setNewReport((prev) =>
         prev
           ? {
@@ -80,8 +103,6 @@ const ShiftReport = () => {
             }
           : undefined
       );
-
-      createNewReport();
     }
   }, []);
 
@@ -224,8 +245,30 @@ const ShiftReport = () => {
     );
   };
 
+  useEffect(() => {
+    const createNewReport = async () => {
+      if (newReport) {
+        await createReport(newReport);
+      }
+      const reports = await retrieveReports();
+      setCurrentReportId(reports.length);
+    };
+    createNewReport();
+  }, [reportMade]);
+
   const handleSubmitPress = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const createNewMachine = async () => {
+      if (newMachine) {
+        await createMachine(newMachine);
+      }
+    };
     event.preventDefault();
+    setReportMade(true); //useEffects execuetes
+    setNewMachine((prev) =>
+      prev ? { ...prev, assignedReportId: currentReportId } : undefined
+    );
+    createNewMachine();
+
     setShowSuccessModal(true);
   };
 
