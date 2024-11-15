@@ -3,6 +3,7 @@ import Nav from "./components/Nav";
 import { useState } from "react";
 //import 'bootstrap/dist/css/bootstrap.min.css';
 //import './App.css'
+import { sendEmail } from "./api/emailAPI";
 
 function App() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -30,6 +31,7 @@ function App() {
   };
 
   const handleEmailRequest = () => {
+    sendEmail();
     setShowEmailModal(false);
     //call Gmail API
   };
