@@ -4,16 +4,28 @@ import { useOutletContext } from "react-router-dom";
 import { login } from "../api/authAPI";
 import { ReportData } from "../interfaces/ReportData";
 import { MachineData } from "../interfaces/MachineData";
-import { createReport, updateReport } from "../api/reportAPI";
+import { createReport } from "../api/reportAPI";
+import auth from "../utils/auth";
+import { createMachine } from "../api/machineAPI";
 
 interface ModalContextType {
   showSuccessModal: boolean;
   showEmailModal: boolean;
   setShowSuccessModal: (value: boolean) => void;
   setShowEmailModal: (value: boolean) => void;
+  isUpChecked: boolean;
+  isDownChecked: boolean;
+  isUpDownVisible: boolean;
+  isPartsVisible: boolean;
+  isComButVisible: boolean;
+  setIsUpChecked: (value: boolean) => void;
+  setIsDownChecked: (value: boolean) => void;
+  setIsUpDownVisible: (value: boolean) => void;
+  setIsPartsVisible: (value: boolean) => void;
+  setIsComButVisible: (value: boolean) => void;
+  machineValue: string;
+  setMachineValue: (value: string) => void;
 }
-
-import auth from "../utils/auth";
 
 const ShiftReport = () => {
   const [newReport, setNewReport] = useState<ReportData | undefined>({
@@ -35,18 +47,35 @@ const ShiftReport = () => {
   });
 
   const [shiftValue, setShiftValue] = useState<number>(0);
-  const [machineValue, setMachineValue] = useState<string>("");
-  const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
-  const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
+  //const [machineValue, setMachineValue] = useState<string>("");
+  //const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
+  //const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
   const [partsMade, setPartsMade] = useState("");
   const [comments, setComments] = useState<string>("");
 
-  const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
-  const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
-  const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
-  const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
+  //const [reportMade, setReportMade] = useState<boolean>(false);
+  const [currentReportId, setCurrentReportId] = useState<number | null>(null);
 
-  const { setShowSuccessModal } = useOutletContext<ModalContextType>();
+  const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
+  // const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
+  // const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
+  // const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
+
+  const {
+    isUpChecked,
+    isDownChecked,
+    isUpDownVisible,
+    isPartsVisible,
+    isComButVisible,
+    setIsUpChecked,
+    setIsDownChecked,
+    setIsUpDownVisible,
+    setIsPartsVisible,
+    setIsComButVisible,
+    setShowSuccessModal,
+    machineValue,
+    setMachineValue,
+  } = useOutletContext<ModalContextType>();
 
   const [loginCheck, setLoginCheck] = useState(false);
   const [loginError, setLoginError] = useState(false);
@@ -61,28 +90,9 @@ const ShiftReport = () => {
 
   useEffect(() => {
     checkLogin();
-
-    const createNewReport = async () => {
-      if (newReport) {
-        await createReport(newReport);
-      }
-    };
-
-    if (loginCheck) {
-      setNewReport((prev) =>
-        prev
-          ? {
-              ...prev,
-              assignedUserId: Number.parseInt(
-                localStorage.getItem("userId") as string
-              ),
-              date: new Date(),
-            }
-          : undefined
-      );
-
-      createNewReport();
-    }
+    // if (loginCheck) {
+    //   //setReportMade(false);
+    // }
   }, []);
 
   const [loginData, setLoginData] = useState({
@@ -127,6 +137,17 @@ const ShiftReport = () => {
     setShiftValue(selectedShift);
     setNewReport((prev) =>
       prev ? { ...prev, shiftNumber: selectedShift.toString() } : undefined
+    );
+    setNewReport((prev) =>
+      prev
+        ? {
+            ...prev,
+            assignedUserId: Number.parseInt(
+              localStorage.getItem("userId") as string
+            ),
+            date: new Date(),
+          }
+        : undefined
     );
     if (selectedShift !== 0) {
       setIsMachineVisible(true);
@@ -224,10 +245,103 @@ const ShiftReport = () => {
     );
   };
 
-  const handleSubmitPress = (event: React.MouseEvent<HTMLButtonElement>) => {
+  // const handleSubmitPress = async (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
+  //   //console.log(newReport);
+  // if (newReport && !currentReportId) {
+  //   const createdReport = await createReport(newReport); // Create the report
+  //   if (createdReport && createdReport.id !== undefined) {
+  //     setCurrentReportId(createdReport.id); // Set the current report ID
+  //   } else {
+  //     console.error("Failed to create report or report ID is undefined");
+  //     return;
+  //   }
+  // }
+
+  //   if (currentReportId) {
+  //     setNewMachine((prev) =>
+  //       prev ? { ...prev, assignedReportId: currentReportId } : undefined
+  //     );
+  //   }
+
+  //   // Step 4: Wait for the report ID to be set, then create the machine
+  //   if (currentReportId && newMachine) {
+  //     try {
+  //       await createMachine(newMachine); // Create the machine with the assigned report ID
+  //       setShowSuccessModal(true); // Show success modal after machine creation
+  //     } catch (error) {
+  //       console.error("Error creating machine:", error);
+  //     }
+  //   }
+  // };
+
+  const handleSubmitPress = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
-    setShowSuccessModal(true);
+
+    try {
+      let reportId = currentReportId;
+
+      // Step 1: Create a report if necessary
+      if (newReport && !reportId) {
+        const createdReport = await createReport(newReport);
+        if (createdReport && createdReport.id !== undefined) {
+          reportId = createdReport.id;
+          setCurrentReportId(reportId);
+        } else {
+          console.error("Failed to create report or report ID is undefined");
+          return;
+        }
+      }
+
+      // Step 2: Assign reportId to newMachine and create the machine
+      if (newMachine && reportId) {
+        const machineWithReportId = {
+          ...newMachine,
+          assignedReportId: reportId,
+        };
+        await createMachine(machineWithReportId);
+        setShowSuccessModal(true); // Show success modal after successful creation
+      }
+    } catch (error) {
+      console.error("Error in submit process:", error);
+    }
   };
+
+  // useEffect(() => {
+  //   // Check if newMachine.assignedReportId is set (not null)
+  //   if (newMachine?.assignedReportId && newMachine !== null) {
+  //     const createMachineForReport = async () => {
+  //       try {
+  //         // Now we can safely create the machine, as assignedReportId is set
+  //         await createMachine(newMachine); // Create the machine with the assignedReportId
+  //         setShowSuccessModal(true); // Show success modal after machine creation
+  //       } catch (error) {
+  //         console.error("Error creating machine:", error);
+  //       }
+  //     };
+
+  //     createMachineForReport(); // Trigger the machine creation
+  //   }
+  // }, [newMachine?.assignedReportId]); // Depend on assignedReportId change
+
+  // useEffect(() => {
+  //   if (currentReportId && newMachine) {
+  //     const createMachineForReport = async () => {
+  //       try {
+  //         // Only create the machine if currentReportId exists
+  //         await createMachine(newMachine);
+  //       } catch (error) {
+  //         console.error("Error creating machine:", error);
+  //       }
+  //     };
+
+  //     createMachineForReport(); // Trigger the machine creation
+  //   }
+  // }, [currentReportId]);
 
   return (
     <>

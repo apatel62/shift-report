@@ -7,24 +7,32 @@ import { useState } from "react";
 function App() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
+  const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
+  const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
+  const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
+  const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
+  const [machineValue, setMachineValue] = useState<string>("");
 
   const handleAddEntryPress = () => {
+    setIsUpChecked(false);
+    setIsDownChecked(false);
+    setIsUpDownVisible(false);
+    setIsPartsVisible(false);
+    setIsComButVisible(false);
+    setMachineValue("");
     setShowSuccessModal(false);
-    //window.location.reload(); //reloads the page so form can be filled out again
-    window.location.assign('/') ;
-    //save data to db
   };
 
   const handleConfirmModalPress = () => {
     setShowSuccessModal(false);
     setShowEmailModal(true);
-    //save data to db
   };
 
   const handleEmailRequest = () => {
-    //call Mailgun API
+    setShowEmailModal(false);
+    //call Gmail API
   };
-
 
   return (
     <>
@@ -40,6 +48,18 @@ function App() {
             showEmailModal,
             setShowSuccessModal,
             setShowEmailModal,
+            isUpChecked,
+            isDownChecked,
+            isUpDownVisible,
+            isPartsVisible,
+            isComButVisible,
+            setIsUpChecked,
+            setIsDownChecked,
+            setIsUpDownVisible,
+            setIsPartsVisible,
+            setIsComButVisible,
+            machineValue,
+            setMachineValue,
           }}
         />
       </div>
