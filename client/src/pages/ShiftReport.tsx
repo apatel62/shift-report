@@ -25,6 +25,8 @@ interface ModalContextType {
   setIsComButVisible: (value: boolean) => void;
   machineValue: string;
   setMachineValue: (value: string) => void;
+  comments: string;
+  setComments: (value: string) => void;
 }
 
 const ShiftReport = () => {
@@ -47,19 +49,12 @@ const ShiftReport = () => {
   });
 
   const [shiftValue, setShiftValue] = useState<number>(0);
-  //const [machineValue, setMachineValue] = useState<string>("");
-  //const [isUpChecked, setIsUpChecked] = useState<boolean>(false);
-  //const [isDownChecked, setIsDownChecked] = useState<boolean>(false);
   const [partsMade, setPartsMade] = useState("");
-  const [comments, setComments] = useState<string>("");
+  //const [comments, setComments] = useState<string>("");
 
-  //const [reportMade, setReportMade] = useState<boolean>(false);
   const [currentReportId, setCurrentReportId] = useState<number | null>(null);
 
   const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
-  // const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
-  // const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
-  // const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
 
   const {
     isUpChecked,
@@ -75,6 +70,8 @@ const ShiftReport = () => {
     setShowSuccessModal,
     machineValue,
     setMachineValue,
+    comments,
+    setComments,
   } = useOutletContext<ModalContextType>();
 
   const [loginCheck, setLoginCheck] = useState(false);
@@ -245,38 +242,6 @@ const ShiftReport = () => {
     );
   };
 
-  // const handleSubmitPress = async (
-  //   event: React.MouseEvent<HTMLButtonElement>
-  // ) => {
-  //   event.preventDefault();
-  //   //console.log(newReport);
-  // if (newReport && !currentReportId) {
-  //   const createdReport = await createReport(newReport); // Create the report
-  //   if (createdReport && createdReport.id !== undefined) {
-  //     setCurrentReportId(createdReport.id); // Set the current report ID
-  //   } else {
-  //     console.error("Failed to create report or report ID is undefined");
-  //     return;
-  //   }
-  // }
-
-  //   if (currentReportId) {
-  //     setNewMachine((prev) =>
-  //       prev ? { ...prev, assignedReportId: currentReportId } : undefined
-  //     );
-  //   }
-
-  //   // Step 4: Wait for the report ID to be set, then create the machine
-  //   if (currentReportId && newMachine) {
-  //     try {
-  //       await createMachine(newMachine); // Create the machine with the assigned report ID
-  //       setShowSuccessModal(true); // Show success modal after machine creation
-  //     } catch (error) {
-  //       console.error("Error creating machine:", error);
-  //     }
-  //   }
-  // };
-
   const handleSubmitPress = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -310,38 +275,6 @@ const ShiftReport = () => {
       console.error("Error in submit process:", error);
     }
   };
-
-  // useEffect(() => {
-  //   // Check if newMachine.assignedReportId is set (not null)
-  //   if (newMachine?.assignedReportId && newMachine !== null) {
-  //     const createMachineForReport = async () => {
-  //       try {
-  //         // Now we can safely create the machine, as assignedReportId is set
-  //         await createMachine(newMachine); // Create the machine with the assignedReportId
-  //         setShowSuccessModal(true); // Show success modal after machine creation
-  //       } catch (error) {
-  //         console.error("Error creating machine:", error);
-  //       }
-  //     };
-
-  //     createMachineForReport(); // Trigger the machine creation
-  //   }
-  // }, [newMachine?.assignedReportId]); // Depend on assignedReportId change
-
-  // useEffect(() => {
-  //   if (currentReportId && newMachine) {
-  //     const createMachineForReport = async () => {
-  //       try {
-  //         // Only create the machine if currentReportId exists
-  //         await createMachine(newMachine);
-  //       } catch (error) {
-  //         console.error("Error creating machine:", error);
-  //       }
-  //     };
-
-  //     createMachineForReport(); // Trigger the machine creation
-  //   }
-  // }, [currentReportId]);
 
   return (
     <>
