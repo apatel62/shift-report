@@ -19,9 +19,6 @@ class AuthService {
       localStorage.removeItem("token");
     } else if (token) {
       const isExpired = this.isTokenExpired(token);
-      const decodedToken = jwtDecode<IdPayload>(token);
-      const userId = decodedToken.id;
-      localStorage.setItem("userId", userId);
       return token && !isExpired;
     } else {
       return false;
@@ -52,6 +49,10 @@ class AuthService {
   login(idToken: string) {
     // TODO: set the token to localStorage
     localStorage.setItem("token", idToken);
+    const decodedToken = jwtDecode<IdPayload>(idToken);
+    //console.log(decodedToken);
+    const userId = decodedToken.id;
+    localStorage.setItem("userId", userId);
     // TODO: redirect to the home page
     window.location.assign("/");
   }

@@ -4,7 +4,7 @@ import { useOutletContext } from "react-router-dom";
 import { login } from "../api/authAPI";
 import { ReportData } from "../interfaces/ReportData";
 import { MachineData } from "../interfaces/MachineData";
-import { createReport, retrieveReports } from "../api/reportAPI";
+import { createReport } from "../api/reportAPI";
 import auth from "../utils/auth";
 import { createMachine } from "../api/machineAPI";
 
@@ -53,8 +53,8 @@ const ShiftReport = () => {
   const [partsMade, setPartsMade] = useState("");
   const [comments, setComments] = useState<string>("");
 
-  const [reportMade, setReportMade] = useState<boolean>(false);
-  const [currentReportId, setCurrentReportId] = useState<number>(0);
+  //const [reportMade, setReportMade] = useState<boolean>(false);
+  const [currentReportId, setCurrentReportId] = useState<number | null>(null);
 
   const [isMachineVisible, setIsMachineVisible] = useState<boolean>(false);
   // const [isUpDownVisible, setIsUpDownVisible] = useState<boolean>(false);
@@ -90,20 +90,9 @@ const ShiftReport = () => {
 
   useEffect(() => {
     checkLogin();
-    if (loginCheck) {
-      setReportMade(false);
-      setNewReport((prev) =>
-        prev
-          ? {
-              ...prev,
-              assignedUserId: Number.parseInt(
-                localStorage.getItem("userId") as string
-              ),
-              date: new Date(),
-            }
-          : undefined
-      );
-    }
+    // if (loginCheck) {
+    //   //setReportMade(false);
+    // }
   }, []);
 
   const [loginData, setLoginData] = useState({
@@ -148,6 +137,17 @@ const ShiftReport = () => {
     setShiftValue(selectedShift);
     setNewReport((prev) =>
       prev ? { ...prev, shiftNumber: selectedShift.toString() } : undefined
+    );
+    setNewReport((prev) =>
+      prev
+        ? {
+            ...prev,
+            assignedUserId: Number.parseInt(
+              localStorage.getItem("userId") as string
+            ),
+            date: new Date(),
+          }
+        : undefined
     );
     if (selectedShift !== 0) {
       setIsMachineVisible(true);
@@ -245,32 +245,103 @@ const ShiftReport = () => {
     );
   };
 
-  useEffect(() => {
-    const createNewReport = async () => {
-      if (newReport) {
-        await createReport(newReport);
-      }
-      const reports = await retrieveReports();
-      setCurrentReportId(reports.length);
-    };
-    createNewReport();
-  }, [reportMade]);
+  // const handleSubmitPress = async (
+  //   event: React.MouseEvent<HTMLButtonElement>
+  // ) => {
+  //   event.preventDefault();
+  //   //console.log(newReport);
+  // if (newReport && !currentReportId) {
+  //   const createdReport = await createReport(newReport); // Create the report
+  //   if (createdReport && createdReport.id !== undefined) {
+  //     setCurrentReportId(createdReport.id); // Set the current report ID
+  //   } else {
+  //     console.error("Failed to create report or report ID is undefined");
+  //     return;
+  //   }
+  // }
 
-  const handleSubmitPress = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const createNewMachine = async () => {
-      if (newMachine) {
-        await createMachine(newMachine);
-      }
-    };
+  //   if (currentReportId) {
+  //     setNewMachine((prev) =>
+  //       prev ? { ...prev, assignedReportId: currentReportId } : undefined
+  //     );
+  //   }
+
+  //   // Step 4: Wait for the report ID to be set, then create the machine
+  //   if (currentReportId && newMachine) {
+  //     try {
+  //       await createMachine(newMachine); // Create the machine with the assigned report ID
+  //       setShowSuccessModal(true); // Show success modal after machine creation
+  //     } catch (error) {
+  //       console.error("Error creating machine:", error);
+  //     }
+  //   }
+  // };
+
+  const handleSubmitPress = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
-    setReportMade(true); //useEffects execuetes
-    setNewMachine((prev) =>
-      prev ? { ...prev, assignedReportId: currentReportId } : undefined
-    );
-    createNewMachine();
 
-    setShowSuccessModal(true);
+    try {
+      let reportId = currentReportId;
+
+      // Step 1: Create a report if necessary
+      if (newReport && !reportId) {
+        const createdReport = await createReport(newReport);
+        if (createdReport && createdReport.id !== undefined) {
+          reportId = createdReport.id;
+          setCurrentReportId(reportId);
+        } else {
+          console.error("Failed to create report or report ID is undefined");
+          return;
+        }
+      }
+
+      // Step 2: Assign reportId to newMachine and create the machine
+      if (newMachine && reportId) {
+        const machineWithReportId = {
+          ...newMachine,
+          assignedReportId: reportId,
+        };
+        await createMachine(machineWithReportId);
+        setShowSuccessModal(true); // Show success modal after successful creation
+      }
+    } catch (error) {
+      console.error("Error in submit process:", error);
+    }
   };
+
+  // useEffect(() => {
+  //   // Check if newMachine.assignedReportId is set (not null)
+  //   if (newMachine?.assignedReportId && newMachine !== null) {
+  //     const createMachineForReport = async () => {
+  //       try {
+  //         // Now we can safely create the machine, as assignedReportId is set
+  //         await createMachine(newMachine); // Create the machine with the assignedReportId
+  //         setShowSuccessModal(true); // Show success modal after machine creation
+  //       } catch (error) {
+  //         console.error("Error creating machine:", error);
+  //       }
+  //     };
+
+  //     createMachineForReport(); // Trigger the machine creation
+  //   }
+  // }, [newMachine?.assignedReportId]); // Depend on assignedReportId change
+
+  // useEffect(() => {
+  //   if (currentReportId && newMachine) {
+  //     const createMachineForReport = async () => {
+  //       try {
+  //         // Only create the machine if currentReportId exists
+  //         await createMachine(newMachine);
+  //       } catch (error) {
+  //         console.error("Error creating machine:", error);
+  //       }
+  //     };
+
+  //     createMachineForReport(); // Trigger the machine creation
+  //   }
+  // }, [currentReportId]);
 
   return (
     <>
