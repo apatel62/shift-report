@@ -35,7 +35,6 @@ function App() {
   const handleEmailRequest = () => {
     sendEmail();
     setShowEmailModal(false);
-    //call Gmail API
   };
 
   return (

@@ -3,7 +3,7 @@ import { getMachineHistory } from "../controllers/history-controller.js";
 
 const router = express.Router();
 
-// GET / - Get report/machine history
-router.get("/", getMachineHistory);
+// POST / - report/machine history
+router.post("/", getMachineHistory);
 
 export { router as historyRouter };
