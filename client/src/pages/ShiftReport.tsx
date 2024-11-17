@@ -250,7 +250,7 @@ const ShiftReport = () => {
     try {
       let reportId = currentReportId;
 
-      // Step 1: Create a report if necessary
+      // create a report if necessary
       if (newReport && !reportId) {
         const createdReport = await createReport(newReport);
         if (createdReport && createdReport.id !== undefined) {
@@ -262,7 +262,7 @@ const ShiftReport = () => {
         }
       }
 
-      // Step 2: Assign reportId to newMachine and create the machine
+      // assign reportId to newMachine and create the machine
       if (newMachine && reportId) {
         const machineWithReportId = {
           ...newMachine,

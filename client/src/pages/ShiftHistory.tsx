@@ -1,6 +1,14 @@
 import React, { useState } from "react";
+import { HistoryData } from "../interfaces/HistoryData";
+import { postHistory } from "../api/historyAPI";
 
 const ShiftHistory = () => {
+  const [historyParams, setHistoryParams] = useState<HistoryData | undefined>({
+    startDate: null,
+    endDate: null,
+    selectedMachines: [],
+  });
+
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
 
@@ -27,6 +35,10 @@ const ShiftHistory = () => {
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
+    const parsedStartDate = new Date(e.target.value);
+    setHistoryParams((prev) =>
+      prev ? { ...prev, startDate: parsedStartDate } : undefined
+    );
     //console.log(e.target.value);
     console.log(isValidDateFormat(e.target.value));
     if (isValidDateFormat(e.target.value) && isValidDateFormat(endDate)) {
@@ -49,6 +61,12 @@ const ShiftHistory = () => {
 
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
+    const parsedEndDate = new Date(e.target.value);
+    // add one day to the date to make the date range inclusive
+    parsedEndDate.setDate(parsedEndDate.getDate() + 1);
+    setHistoryParams((prev) =>
+      prev ? { ...prev, endDate: parsedEndDate } : undefined
+    );
     if (isValidDateFormat(startDate) && isValidDateFormat(e.target.value)) {
       setIsCheckboxVisible(true);
     } else {
@@ -329,8 +347,45 @@ const ShiftHistory = () => {
     }
   };
 
-  const handleSubmitPress = () => {
-    //create filtered table by grabbing data from database
+  const handleSubmitPress = async () => {
+    // Build the selectedMachines array locally
+    let updatedSelectedMachines: string[] = [];
+
+    if (isAllChecked) {
+      updatedSelectedMachines = [
+        "Machine 1",
+        "Machine 2",
+        "Machine 3",
+        "Machine 4",
+        "Machine 5",
+      ];
+    } else {
+      if (isM1Checked) updatedSelectedMachines.push("Machine 1");
+      if (isM2Checked) updatedSelectedMachines.push("Machine 2");
+      if (isM3Checked) updatedSelectedMachines.push("Machine 3");
+      if (isM4Checked) updatedSelectedMachines.push("Machine 4");
+      if (isM5Checked) updatedSelectedMachines.push("Machine 5");
+    }
+
+    // Handle undefined for startDate and endDate
+    const startDate = historyParams?.startDate ?? null;
+    const endDate = historyParams?.endDate ?? null;
+
+    // Update state with the finalized selectedMachines and handle null values for dates
+    const updatedParams = {
+      selectedMachines: updatedSelectedMachines,
+      startDate: startDate,
+      endDate: endDate,
+    };
+
+    setHistoryParams(updatedParams); // Update state synchronously
+
+    // Use the updatedParams directly for the API call
+    console.log(updatedParams);
+    const historyQuery = await postHistory(updatedParams);
+    console.log(historyQuery);
+
+    // Create filtered table by grabbing data from the database
     setIsDownloadVisible(true);
     setIsTableVisible(true);
   };
