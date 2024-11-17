@@ -97,3 +97,32 @@ export const deleteMachine = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllMachinesEmail = async (reportId: number) => {
+  try {
+    const machines = await Machine.findAll({
+      include: [
+        {
+          model: Report,
+          as: "assignedReport",
+          attributes: ["shiftNumber"], // may need to change what attribute we include 
+        },
+      ],
+      where: {
+        assignedReportId: reportId
+        },
+    });
+    // Return the fetched reports
+    return machines.map((machine) => ({
+      id: machine.id,
+      machine: machine.machine,
+      machineStatus: machine.machineStatus,
+      partsMade: machine.partsMade,
+      comments: machine.comments,
+      assignedReportId: machine.assignedReportId,
+    }));
+  } catch (error: any) {
+    console.error('Error fetching machines:', error.message);
+    throw new Error('Failed to fetch machines');
+  }
+};

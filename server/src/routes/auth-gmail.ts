@@ -1,7 +1,22 @@
 import { Router, Request, Response } from "express";
+import {
+  getAllReportsEmail,
+  getReportByIdEmail,
+} from "../controllers/report-controller.js";
+
+import {
+  getAllMachinesEmail,
+} from "../controllers/machine-controller.js";
 
 import { google } from "googleapis";
-// import { authenticate } from '@google-cloud/local-auth';
+
+const formatDate = (date: Date): string => {
+  const month = ("0" + (date.getMonth() + 1)).slice(-2); // Month is 0-indexed
+  const day = ("0" + date.getDate()).slice(-2);
+  const year = date.getFullYear();
+
+  return `${month}-${day}-${year}`;
+};
 
 // Set up Gmail API
 const gmail = google.gmail("v1");
@@ -29,20 +44,33 @@ async function sendEmail() {
 
     google.options({ auth });
 
+    //grabbing the report and machine info
+    const allReports = await getAllReportsEmail();
+    const shiftReport = await getReportByIdEmail(allReports.length); //grabs the latest shift report saved which is the one that needs to be emailed
+    let dateFormatted: string = "";
+    if (shiftReport) {
+      dateFormatted = formatDate(shiftReport.date);
+    }
+    const allMachines = await getAllMachinesEmail(allReports.length);
+    let machinesEmail = allMachines.map(machine => {
+      return `<p style = "font-weight: 200">${machine.machine} - Status: ${machine.machineStatus} Parts Made: ${machine.partsMade} ${machine.comments ? `Comments: ${machine.comments}` : ""}</p>`;
+    });
+
+
     // Email content
-    const subject = "🤘 Hello 🤘";
+    const subject = "Shift Report";
     const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString(
       "base64"
     )}?=`;
     const messageParts = [
       "From: Arjun Patel <arjunpatel9217@gmail.com>",
-      "To: Keaton Greer <keatongreer1@gmail.com>",
-      "Content-Type: text/html; charset=utf-8",
+      "To: Arjun Patel <arjunpatel9217@gmail.com>",
+      "Content-Type: text/html; charset=utf-8", 
       "MIME-Version: 1.0",
       `Subject: ${utf8Subject}`,
       "",
-      "This is a message just to say hello.",
-      "So... <b>Hello!</b>  🤘❤️😎",
+      `<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`,
+      ...machinesEmail,
     ];
     const message = messageParts.join("\n");
 

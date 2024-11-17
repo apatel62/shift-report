@@ -14,6 +14,7 @@ function App() {
   const [isPartsVisible, setIsPartsVisible] = useState<boolean>(false);
   const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
   const [machineValue, setMachineValue] = useState<string>("");
+  const [comments, setComments] = useState<string>("");
 
   const handleAddEntryPress = () => {
     setIsUpChecked(false);
@@ -22,6 +23,7 @@ function App() {
     setIsPartsVisible(false);
     setIsComButVisible(false);
     setMachineValue("");
+    setComments("");
     setShowSuccessModal(false);
   };
 
@@ -62,6 +64,8 @@ function App() {
             setIsComButVisible,
             machineValue,
             setMachineValue,
+            comments,
+            setComments,
           }}
         />
       </div>
