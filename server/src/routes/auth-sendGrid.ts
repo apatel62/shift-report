@@ -37,8 +37,12 @@ async function sendEmail() {
 
     let emailHTML = [`<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`, ...machinesEmail];
     console.log(emailHTML.join("\n"));
+    const recipients = [
+      'keatongreer1@gmail.com',
+      'desmil.co@gmail.com',
+    ];
     const msg = {
-      to: 'arjunpatel9217@gmail.com',
+      to: recipients,
       from: 'arjunpatel9217@gmail.com', // Use the email address or domain you verified above
       subject: 'Shift Report',
       html: emailHTML.join("\n"),
