@@ -5,8 +5,6 @@ import { reportRouter } from "./report-routes.js";
 
 const router = Router();
 
-// router.use('/users', userRouter);
-
 router.use("/users", userRouter);
 
 router.use("/machines", machineRouter);
