@@ -310,7 +310,7 @@ const ShiftReport = () => {
             </h3>
             <button
               type="submit"
-              className="btn btn-info  btn-lg btn-block btn-custom-1"
+              className="btn  btn-lg btn-block btn-custom-1"
               onClick={handleLoginSubmit}
             >
               Login
