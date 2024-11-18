@@ -8,6 +8,9 @@ const ShiftHistory = () => {
     endDate: null,
     selectedMachines: [],
   });
+  const filteredTable = document
+    ?.querySelector("table")
+    ?.querySelector("tbody"); //grabs the tbody tag from the table
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
@@ -35,9 +38,11 @@ const ShiftHistory = () => {
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
-    const parsedStartDate = new Date(e.target.value);
+    const parsedStartDate = e.target.value;
     setHistoryParams((prev) =>
-      prev ? { ...prev, startDate: parsedStartDate } : undefined
+      prev
+        ? { ...prev, startDate: `${parsedStartDate}T00:00:00.000Z` }
+        : undefined
     );
     //console.log(e.target.value);
     console.log(isValidDateFormat(e.target.value));
@@ -61,11 +66,11 @@ const ShiftHistory = () => {
 
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
-    const parsedEndDate = new Date(e.target.value);
+    const parsedEndDate = e.target.value;
     // add one day to the date to make the date range inclusive
-    parsedEndDate.setDate(parsedEndDate.getDate() + 1);
+    //parsedEndDate.setDate(parsedEndDate.getDate() + 1);
     setHistoryParams((prev) =>
-      prev ? { ...prev, endDate: parsedEndDate } : undefined
+      prev ? { ...prev, endDate: `${parsedEndDate}T00:00:00.000Z` } : undefined
     );
     if (isValidDateFormat(startDate) && isValidDateFormat(e.target.value)) {
       setIsCheckboxVisible(true);
@@ -350,7 +355,9 @@ const ShiftHistory = () => {
   const handleSubmitPress = async () => {
     // Build the selectedMachines array locally
     let updatedSelectedMachines: string[] = [];
-
+    if (filteredTable) {
+      filteredTable.innerHTML = "";
+    }
     if (isAllChecked) {
       updatedSelectedMachines = [
         "Machine 1",
@@ -387,7 +394,33 @@ const ShiftHistory = () => {
 
     // Create filtered table by grabbing data from the database
     setIsDownloadVisible(true);
-    setIsTableVisible(true);
+    if (filterValue === 1) {
+      //user selected daily format
+      for (let i = 0; i < historyQuery.length; i++) {
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        const td3 = document.createElement("td");
+
+        //formats date to MM-dd-YYYY
+        const dateString = historyQuery[i].date;
+        const year = dateString.substring(0, 4); // "2024"
+        const month = dateString.substring(5, 7); // "11"
+        const day = dateString.substring(8, 10); // "16"
+
+        // Create the formatted string "MM-dd-YYYY"
+        const formattedDate = `${month}-${day}-${year}`;
+
+        td1.textContent = formattedDate;
+        td2.textContent = historyQuery[i].machine;
+        td3.textContent = historyQuery[i].partsMade;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        filteredTable?.appendChild(tr);
+      }
+      setIsTableVisible(true);
+    }
   };
 
   const handlePdfDownload = () => {

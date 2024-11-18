@@ -1,5 +1,5 @@
 export interface HistoryData {
-  startDate: Date | null;
-  endDate: Date | null;
+  startDate: string | null;
+  endDate: string | null;
   selectedMachines: string[] | null;
 }

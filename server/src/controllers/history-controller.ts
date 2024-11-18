@@ -29,7 +29,7 @@ export const getMachineHistory = async (req: Request, res: Response) => {
   }
 };
 
-const getFilteredReports = async (startDate: Date, endDate: Date) => {
+const getFilteredReports = async (startDate: string, endDate: string) => {
   try {
     const reports = await Report.findAll({
       attributes: ["id", "date"],
