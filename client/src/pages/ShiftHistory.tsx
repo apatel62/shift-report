@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { HistoryData } from "../interfaces/HistoryData";
 import { postHistory } from "../api/historyAPI";
+import { createPDF } from "../api/authPdf";
+import { getPDF } from "../api/authPdfDownload";
 
 const ShiftHistory = () => {
   const [historyParams, setHistoryParams] = useState<HistoryData | undefined>({
     startDate: null,
     endDate: null,
     selectedMachines: [],
+    interval: null,
   });
   const filteredTable = document
     ?.querySelector("table")
@@ -14,6 +17,7 @@ const ShiftHistory = () => {
 
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
+  const [filterText, setFilterText] = useState<string>("");
 
   const [isCheckboxVisible, setIsCheckboxVisible] = useState<boolean>(false);
 
@@ -30,6 +34,7 @@ const ShiftHistory = () => {
 
   const [isDownloadVisible, setIsDownloadVisible] = useState<boolean>(false);
   const [isTableVisible, setIsTableVisible] = useState<boolean>(false);
+  const [downloadURL, setDownloadURL] = useState<string>("");
 
   const isValidDateFormat = (date: string) => {
     const regex = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/;
@@ -41,10 +46,9 @@ const ShiftHistory = () => {
     const parsedStartDate = e.target.value;
     setHistoryParams((prev) =>
       prev
-        ? { ...prev, startDate: `${parsedStartDate}T00:00:00.000Z` }
+        ? { ...prev, startDate: `${parsedStartDate}T06:00:00.000Z` }
         : undefined
     );
-    //console.log(e.target.value);
     console.log(isValidDateFormat(e.target.value));
     if (isValidDateFormat(e.target.value) && isValidDateFormat(endDate)) {
       setIsCheckboxVisible(true);
@@ -67,10 +71,8 @@ const ShiftHistory = () => {
   const handleEndDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEndDate(e.target.value);
     const parsedEndDate = e.target.value;
-    // add one day to the date to make the date range inclusive
-    //parsedEndDate.setDate(parsedEndDate.getDate() + 1);
     setHistoryParams((prev) =>
-      prev ? { ...prev, endDate: `${parsedEndDate}T00:00:00.000Z` } : undefined
+      prev ? { ...prev, endDate: `${parsedEndDate}T06:00:00.000Z` } : undefined
     );
     if (isValidDateFormat(startDate) && isValidDateFormat(e.target.value)) {
       setIsCheckboxVisible(true);
@@ -343,6 +345,9 @@ const ShiftHistory = () => {
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedFilter = Number(e.target.value);
     setFilterValue(selectedFilter);
+    setHistoryParams((prev) =>
+      prev ? { ...prev, interval: selectedFilter } : undefined
+    );
     if (selectedFilter !== 0) {
       setIsSubmitVisible(true);
     } else {
@@ -377,12 +382,14 @@ const ShiftHistory = () => {
     // Handle undefined for startDate and endDate
     const startDate = historyParams?.startDate ?? null;
     const endDate = historyParams?.endDate ?? null;
+    const interval = historyParams?.interval ?? null;
 
     // Update state with the finalized selectedMachines and handle null values for dates
     const updatedParams = {
       selectedMachines: updatedSelectedMachines,
       startDate: startDate,
       endDate: endDate,
+      interval: interval,
     };
 
     setHistoryParams(updatedParams); // Update state synchronously
@@ -391,10 +398,14 @@ const ShiftHistory = () => {
     console.log(updatedParams);
     const historyQuery = await postHistory(updatedParams);
     console.log(historyQuery);
+    const pdfId = await createPDF(historyQuery);
+    //localStorage.setItem("id", pdfId);
+    console.log(pdfId);
 
     // Create filtered table by grabbing data from the database
     setIsDownloadVisible(true);
     if (filterValue === 1) {
+      setFilterText("Date");
       //user selected daily format
       for (let i = 0; i < historyQuery.length; i++) {
         const tr = document.createElement("tr");
@@ -421,10 +432,87 @@ const ShiftHistory = () => {
       }
       setIsTableVisible(true);
     }
+
+    if (filterValue === 2) {
+      setFilterText("Week");
+      let weekString = "";
+      let formattedWeek = "";
+      let weekNum = 0;
+      for (let i = 0; i < historyQuery.length; i++) {
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        const td3 = document.createElement("td");
+
+        //formats week
+        if (weekString !== historyQuery[i].date) {
+          weekString = historyQuery[i].date;
+          weekNum += 1;
+          formattedWeek = `Week ${weekNum}`;
+        }
+
+        td1.textContent = formattedWeek;
+        td2.textContent = historyQuery[i].machine;
+        td3.textContent = historyQuery[i].partsMade;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        filteredTable?.appendChild(tr);
+      }
+      setIsTableVisible(true);
+    }
+
+    if (filterValue === 3) {
+      setFilterText("Month");
+      for (let i = 0; i < historyQuery.length; i++) {
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        const td3 = document.createElement("td");
+
+        td1.textContent = historyQuery[i].date;
+        td2.textContent = historyQuery[i].machine;
+        td3.textContent = historyQuery[i].partsMade;
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        filteredTable?.appendChild(tr);
+      }
+      setIsTableVisible(true);
+    }
+
+    const pdfURL = await pollPDFReady(pdfId);
+    if (pdfURL) {
+      setDownloadURL(pdfURL);
+      console.log("PDF is ready to download:", pdfURL);
+    }
   };
 
-  const handlePdfDownload = () => {
-    //call DynamicDoc API to convert fitlered table to pdf & download it to user's PC
+  const pollPDFReady = async (pdfId: string): Promise<string | null> => {
+    const maxRetries = 10;
+    const retryDelay = 3000; // 3 seconds between retries
+
+    await new Promise((resolve) => setTimeout(resolve, retryDelay)); // Wait before starting to check
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      console.log(`Checking PDF readiness (attempt ${attempt + 1})...`);
+      const pdfURL = await getPDF(pdfId);
+
+      if (pdfURL) {
+        return pdfURL; // Exit if PDF is ready
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, retryDelay)); // Wait before retrying
+    }
+
+    console.error("PDF generation failed after maximum retries.");
+    return null;
+  };
+
+  const handlePdfDownload = async () => {
+    //download pdf link
+    if (downloadURL) {
+      window.open(downloadURL, "_blank"); // Open PDF in a new tab
+    }
   };
 
   return (
@@ -572,14 +660,18 @@ const ShiftHistory = () => {
           View Table
         </button>
         {/* PDF download link  */}
-        <a
-          href="#"
-          onClick={handlePdfDownload}
-          style={{ display: isDownloadVisible ? "block" : "none" }}
-        >
-          {" "}
-          Download Filtered History{" "}
-        </a>
+        {downloadURL ? (
+          <a href="#" onClick={handlePdfDownload}>
+            Download Filtered History
+          </a>
+        ) : (
+          <p
+            className="wait-text"
+            style={{ display: isDownloadVisible ? "block" : "none" }}
+          >
+            Generating PDF ...
+          </p>
+        )}
         {/* Filtered table  */}
         <table
           className="table table-bordered table-custom"
@@ -587,7 +679,7 @@ const ShiftHistory = () => {
         >
           <thead>
             <tr>
-              <td>Date</td>
+              <td>{filterText}</td>
               <td>Machine</td>
               <td>Parts Produced</td>
             </tr>

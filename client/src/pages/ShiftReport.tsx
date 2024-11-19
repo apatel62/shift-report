@@ -140,7 +140,7 @@ const ShiftReport = () => {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
     const day = currentDate.getDate();
-    const finalformattedDate = `${year}-${month}-${day}T00:00:00.000Z`;
+    const finalformattedDate = `${year}-${month}-${day}T06:00:00.000Z`;
     setNewReport((prev) =>
       prev
         ? {

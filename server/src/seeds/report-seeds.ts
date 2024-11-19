@@ -4,18 +4,18 @@ const currentDate = new Date();
 const year = currentDate.getFullYear();
 const month = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
 const day = currentDate.getDate();
-const finalformattedDate = `${year}-${month}-${day}T00:00:00.000Z`;
+const finalformattedDate = `${year}-${month}-${day}T06:00:00.000Z`;
   
 export const seedReports = async () => {
   await Report.bulkCreate([
     {
       shiftNumber: "Shift 1",
-      date: new Date("2024-11-16T00:00:00.000Z"),
+      date: new Date("2024-11-16T06:00:00.000Z"),
       assignedUserId: 1,
     },
     {
       shiftNumber: "Shift 2",
-      date: new Date("2024-11-16T00:00:00.000Z"),
+      date: new Date("2024-11-16T06:00:00.000Z"),
       assignedUserId: 2,
     },
     {
