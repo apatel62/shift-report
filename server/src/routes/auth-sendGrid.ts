@@ -38,6 +38,7 @@ async function sendEmail() {
     let emailHTML = [`<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`, ...machinesEmail];
     console.log(emailHTML.join("\n"));
     const recipients = [
+      'arjunpatel9217@gmail.com',
       'keatongreer1@gmail.com',
       'desmil.co@gmail.com',
     ];

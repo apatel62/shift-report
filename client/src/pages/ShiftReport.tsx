@@ -135,6 +135,12 @@ const ShiftReport = () => {
     setNewReport((prev) =>
       prev ? { ...prev, shiftNumber: selectedShift.toString() } : undefined
     );
+
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
+    const day = currentDate.getDate();
+    const finalformattedDate = `${year}-${month}-${day}T06:00:00.000Z`;
     setNewReport((prev) =>
       prev
         ? {
@@ -142,7 +148,7 @@ const ShiftReport = () => {
             assignedUserId: Number.parseInt(
               localStorage.getItem("userId") as string
             ),
-            date: new Date(),
+            date: new Date(finalformattedDate),
           }
         : undefined
     );

@@ -11,6 +11,9 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.wait-text {
+  color: var(--text);
+}
 
 h1, a {
   color: var(--text);
