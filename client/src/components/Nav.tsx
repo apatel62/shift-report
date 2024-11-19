@@ -27,7 +27,7 @@ const Nav = () => {
       return "Report History";
     } else if (currentPage === "/") {
       if (!loginCheck) {
-        return "Login";
+        return "Login to Create a Shift History Report";
       } else {
         return "Report";
       }
@@ -43,7 +43,7 @@ const Nav = () => {
           to="/"
           className={currentPage === "/" ? "nav-link active" : "nav-link"}
         >
-          Home
+          Create a Report
         </Link>
         <Link
           to="/ShiftHistory"
@@ -53,10 +53,18 @@ const Nav = () => {
               : "nav-bottom nav-link"
           }
         >
-          History
+          View History
         </Link>
       </nav>
-      <h1 className="navbar-title">{getTitle()}</h1>
+      <div className="loginText">
+        <h1 className="navbar-title">{getTitle()}</h1>
+        <h2
+          className="navbar-subtitle"
+          style={{ display: !loginCheck ? "block" : "none" }}
+        >
+          Or Select View Production History
+        </h2>
+      </div>
       <button
         className="logoff"
         style={{ display: loginCheck ? "block" : "none" }}
