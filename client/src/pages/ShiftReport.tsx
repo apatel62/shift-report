@@ -324,7 +324,7 @@ const ShiftReport = () => {
           </div>
         ) : (
           <div>
-            <h2>Shift:</h2>
+            <h2 className="shift-title">Shift:</h2>
             {/* Shift select question */}
             <select
               id="shift-option"

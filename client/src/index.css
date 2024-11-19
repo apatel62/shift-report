@@ -83,6 +83,11 @@ body {
   margin: 0px auto;
 }
 
+.shift-title {
+  margin-top: 50px;
+}
+
+
 .form-custom-1 {
   width: 25%;
   margin: 0px auto;
@@ -213,7 +218,7 @@ span {
 
 .nav-link {
   margin-left: 20px;
-  font-size: 1.5rem;
+  font-size: 1rem;
   padding: 10px;
   border-radius: 10px;
   color: var(--text);
@@ -237,7 +242,7 @@ span {
 }
 
 .datepicker {
-  margin-top: 20px;
+  margin-top: 50px;
   color: var(--text);
 }
 
@@ -283,6 +288,14 @@ canvas {
 
 /*adjusts spacing and position in navbar depending on screen width*/
 @media (max-width: 1300px) {
+  .shift-title {
+    margin-top: 0px;
+  }
+
+  .datepicker {
+    margin-top: 0px;
+  }
+
   .navbar-title {
     font-size: 1.5rem;
   }
@@ -302,7 +315,7 @@ canvas {
     margin-top: 0px;
   }
 
-  .nav-link {
+  .nav-link, .logoff {
     font-size: 0.9rem;
   }
 
@@ -336,6 +349,10 @@ canvas {
     font-size: 0.7rem;
     margin-left: 10px;
   }
+
+  .logoff {
+    font-size: 0.7rem;
+  }
 }
 
 @media (max-width: 625px) {
@@ -352,4 +369,9 @@ canvas {
     font-size: 0.7rem;
     margin-left: 2px;
   }
+
+  .logoff {
+    font-size: 0.7rem;
+  }
+  
 }
