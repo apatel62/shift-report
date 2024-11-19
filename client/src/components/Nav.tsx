@@ -23,12 +23,14 @@ const Nav = () => {
   };
 
   const getTitle = () => {
-    if (!loginCheck) {
-      return "Login";
-    } else if (loginCheck && currentPage === "/") {
-      return "Report";
-    } else if (loginCheck && currentPage === "/ShiftHistory") {
+    if (currentPage === "/ShiftHistory") {
       return "Report History";
+    } else if (currentPage === "/") {
+      if (!loginCheck) {
+        return "Login";
+      } else {
+        return "Report";
+      }
     } else {
       return "Page Not Found";
     }
