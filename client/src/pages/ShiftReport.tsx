@@ -431,7 +431,7 @@ const ShiftReport = () => {
               ></textarea>
               <button
                 type="submit"
-                className="btn btn-success btn-lg btn-block btn-custom"
+                className="btn btn-lg btn-block btn-custom"
                 onClick={handleSubmitPress}
               >
                 Submit

@@ -653,7 +653,7 @@ const ShiftHistory = () => {
         {/* Submit button  */}
         <button
           type="submit"
-          className="btn btn-success btn-lg btn-block btn-custom"
+          className="btn btn-lg btn-block btn-custom"
           style={{ display: isSubmitVisible ? "block" : "none" }}
           onClick={handleSubmitPress}
         >
