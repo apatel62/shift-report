@@ -6,14 +6,14 @@ interface IdPayload {
 
 class AuthService {
   getProfile() {
-    // TODO: return the decoded token
+    // return the decoded token
     const token = this.getToken();
     const decoded: JwtPayload = jwtDecode(token);
     return decoded;
   }
 
   loggedIn() {
-    // TODO: return a value that indicates if the user is logged in
+    // return a value that indicates if the user is logged in
     const token = this.getToken();
     if (token === "undefined") {
       localStorage.removeItem("token");
@@ -26,18 +26,18 @@ class AuthService {
   }
 
   isTokenExpired(token: string) {
-    // TODO: return a value that indicates if the token is expired
+    // return a value that indicates if the token is expired
     if (token) {
       const data = jwtDecode<JwtPayload>(token);
-      const curTime = Date.now() / 1000; //current time in seconds
-      return data?.exp && data.exp < curTime; //returns true if data.exp is less than the curTime and false for the vice versa
+      const curTime = Date.now() / 1000; // current time in seconds
+      return data?.exp && data.exp < curTime; // returns true if data.exp is less than the curTime and false for the vice versa
     } else {
       return true;
     }
   }
 
   getToken(): string {
-    // TODO: return the token
+    // return the token
     const token = localStorage.getItem("token");
     if (token) {
       return token;
@@ -47,21 +47,21 @@ class AuthService {
   }
 
   login(idToken: string) {
-    // TODO: set the token to localStorage
+    // set the token to localStorage
     localStorage.setItem("token", idToken);
     const decodedToken = jwtDecode<IdPayload>(idToken);
-    //console.log(decodedToken);
+    // console.log(decodedToken);
     const userId = decodedToken.id;
     localStorage.setItem("userId", userId);
-    // TODO: redirect to the home page
+    // redirect to the home page
     window.location.assign("/");
   }
 
   logout() {
-    // TODO: remove the token from localStorage
+    // remove the token from localStorage
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
-    // TODO: redirect to the login page
+    // redirect to the login page
     window.location.assign("/");
   }
 }

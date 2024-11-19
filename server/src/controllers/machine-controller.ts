@@ -10,7 +10,7 @@ export const getAllMachines = async (_req: Request, res: Response) => {
         {
           model: Report,
           as: "assignedReport",
-          attributes: ["shiftNumber"], // may need to change what attribute we include
+          attributes: ["shiftNumber"],
         },
       ],
     });
@@ -29,7 +29,7 @@ export const getMachineById = async (req: Request, res: Response) => {
         {
           model: Report,
           as: "assignedReport",
-          attributes: ["shiftNumber"], // may need to change what attribute we include
+          attributes: ["shiftNumber"],
         },
       ],
     });
@@ -105,12 +105,12 @@ export const getAllMachinesEmail = async (reportId: number) => {
         {
           model: Report,
           as: "assignedReport",
-          attributes: ["shiftNumber"], // may need to change what attribute we include 
+          attributes: ["shiftNumber"],
         },
       ],
       where: {
-        assignedReportId: reportId
-        },
+        assignedReportId: reportId,
+      },
     });
     // Return the fetched reports
     return machines.map((machine) => ({
@@ -122,7 +122,7 @@ export const getAllMachinesEmail = async (reportId: number) => {
       assignedReportId: machine.assignedReportId,
     }));
   } catch (error: any) {
-    console.error('Error fetching machines:', error.message);
-    throw new Error('Failed to fetch machines');
+    console.error("Error fetching machines:", error.message);
+    throw new Error("Failed to fetch machines");
   }
 };

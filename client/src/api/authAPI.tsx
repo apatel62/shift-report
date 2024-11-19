@@ -1,7 +1,7 @@
 import { UserLogin } from "../interfaces/UserLogin";
 
 const login = async (userInfo: UserLogin) => {
-  // TODO: make a POST request to the login route
+  // make a POST request to the login route
   const respsone = await fetch("/auth/login", {
     method: "POST",
     headers: {
