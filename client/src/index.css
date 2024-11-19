@@ -1,8 +1,8 @@
 /*sets color styles */
 :root{
   --text: #ffffff;
-  --primary: #4682B4; 
-  --secondary: #003366; 
+  --primary: #e0b22d; 
+  --secondary: #d76d26; 
 }
 
 * {
@@ -84,6 +84,8 @@ body {
 
 .btn-custom-1 {
   color: var(--text);
+  background-color: #e0b22d ;
+  border-color: #e0b22d ;
   margin: 20px auto;
   width: 25%;
   box-shadow: var(--bs-box-shadow) !important;
@@ -116,10 +118,19 @@ span{
 /* !important insures that the style is always applied*/
 .btn-custom {
   color: var(--text);
+  background-color: #e0b22d ;
   margin: 20px auto;
   width: 50%;
   box-shadow: var(--bs-box-shadow) !important;
+} 
+
+.btn-custom-1:hover{
+color: var(--text);
+background-color: #c59f22;
+
 }
+
+
 
 
 .form-custom, .form-custom-1, .form-custom-2 {
