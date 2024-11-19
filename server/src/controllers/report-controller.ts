@@ -94,7 +94,6 @@ export const deleteReport = async (req: Request, res: Response) => {
   }
 };
 
-
 // GET /reports for sending email
 export const getAllReportsEmail = async () => {
   try {
@@ -103,7 +102,7 @@ export const getAllReportsEmail = async () => {
       include: [
         {
           model: User,
-          as: "assignedUser", // Ensure that you have the association set up properly in Sequelize
+          as: "assignedUser",
           attributes: ["username"], // Only fetch the username field from the assigned user
         },
       ],
@@ -117,8 +116,8 @@ export const getAllReportsEmail = async () => {
       assignedUserId: report.assignedUserId,
     }));
   } catch (error: any) {
-    console.error('Error fetching reports:', error.message);
-    throw new Error('Failed to fetch reports');
+    console.error("Error fetching reports:", error.message);
+    throw new Error("Failed to fetch reports");
   }
 };
 
@@ -130,7 +129,7 @@ export const getReportByIdEmail = async (id: number) => {
         {
           model: User,
           as: "assignedUser",
-          attributes: ["username"],  // Only fetch the username field from the assigned user
+          attributes: ["username"], // Only fetch the username field from the assigned user
         },
       ],
     });
@@ -141,7 +140,7 @@ export const getReportByIdEmail = async (id: number) => {
         id: report.id,
         shiftNumber: report.shiftNumber,
         date: report.date,
-        assignedUserId: report.assignedUserId,  // The username of the assigned user
+        assignedUserId: report.assignedUserId, // The username of the assigned user
       };
     } else {
       // If no report is found, return null

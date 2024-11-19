@@ -1,8 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Nav from "./components/Nav";
 import { useState } from "react";
-//import 'bootstrap/dist/css/bootstrap.min.css';
-//import './App.css'
 import { sendEmail } from "./api/emailAPI";
 
 function App() {
