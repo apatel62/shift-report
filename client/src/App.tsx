@@ -33,6 +33,7 @@ function App() {
   const handleEmailRequest = () => {
     sendEmail();
     setShowEmailModal(false);
+    window.location.reload();
   };
 
   return (
