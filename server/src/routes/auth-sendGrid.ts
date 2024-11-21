@@ -3,12 +3,11 @@ import {
   getAllReportsEmail,
   getReportByIdEmail,
 } from "../controllers/report-controller.js";
+import { getAllAdmins } from "../controllers/user-controller.js";
 
-import {
-  getAllMachinesEmail,
-} from "../controllers/machine-controller.js";
+import { getAllMachinesEmail } from "../controllers/machine-controller.js";
 
-import sgMail  from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY || "");
 
 const formatDate = (date: Date): string => {
@@ -18,7 +17,6 @@ const formatDate = (date: Date): string => {
 
   return `${month}-${day}-${year}`;
 };
-
 
 // Function to authenticate and send email
 async function sendEmail() {
@@ -31,32 +29,43 @@ async function sendEmail() {
       dateFormatted = formatDate(shiftReport.date);
     }
     const allMachines = await getAllMachinesEmail(allReports.length);
-    let machinesEmail = allMachines.map(machine => {
-      return `<p style = "font-weight: 200">${machine.machine} - Status: ${machine.machineStatus} Parts Made: ${machine.partsMade} ${machine.comments ? `Comments: ${machine.comments}` : ""}</p>`;
+    let machinesEmail = allMachines.map((machine) => {
+      return `<p style = "font-weight: 200">${machine.machine} - Status: ${
+        machine.machineStatus
+      } Parts Made: ${machine.partsMade} ${
+        machine.comments ? `Comments: ${machine.comments}` : ""
+      }</p>`;
     });
 
-    let emailHTML = [`<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`, ...machinesEmail];
-    console.log(emailHTML.join("\n"));
-    const recipients = [
-      'arjunpatel9217@gmail.com',
-      'keatongreer1@gmail.com',
-      'desmil.co@gmail.com',
+    let emailHTML = [
+      `<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`,
+      ...machinesEmail,
     ];
+    console.log(emailHTML.join("\n"));
+
+    const allAdmins = await getAllAdmins();
+    console.log(allAdmins);
+
+    // const recipients = [
+    //   "arjunpatel9217@gmail.com",
+    //   "keatongreer1@gmail.com",
+    //   "desmil.co@gmail.com",
+    // ];
+
     const msg = {
-      to: recipients,
-      from: 'arjunpatel9217@gmail.com', // Use the email address or domain you verified above
-      subject: 'Shift Report',
+      to: allAdmins as string[],
+      from: "arjunpatel9217@gmail.com", // Use the email address or domain you verified above
+      subject: "Shift Report",
       html: emailHTML.join("\n"),
     };
 
     await sgMail.send(msg);
+  } catch (error: any) {
+    console.error(error);
 
-    } catch (error: any) {
-      console.error(error);
-
-      if (error.response) {
-        console.error(error.response.body)
-      }
+    if (error.response) {
+      console.error(error.response.body);
+    }
     return;
   }
 }
