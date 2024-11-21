@@ -360,6 +360,9 @@ const ShiftHistory = () => {
   const handleSubmitPress = async () => {
     // Build the selectedMachines array locally
     let updatedSelectedMachines: string[] = [];
+    let pdfURL: string | null = null;
+    let pdfId: string = "";
+    setDownloadURL("");
     if (filteredTable) {
       filteredTable.innerHTML = "";
     }
@@ -398,8 +401,34 @@ const ShiftHistory = () => {
     console.log(updatedParams);
     const historyQuery = await postHistory(updatedParams);
     console.log(historyQuery);
-    const pdfId = await createPDF(historyQuery);
-    //localStorage.setItem("id", pdfId);
+
+    //formatting historyQuery before calling pdf Monkey API to generate the pdf
+    if (filterValue === 1) {
+      const updatedHistoryQuery = historyQuery.map(
+        (item: { date: string }) => ({
+          ...item,
+          date: item.date.split("T")[0],
+        })
+      );
+      pdfId = await createPDF(updatedHistoryQuery);
+    }
+    if (filterValue === 2) {
+      let currentWeek = 0;
+      let weekString = "";
+      const updatedHistoryQuery = historyQuery.map((item: { date: string }) => {
+        if (weekString !== item.date) {
+          weekString = item.date;
+          currentWeek += 1;
+        }
+        return { ...item, date: `Week ${currentWeek}` };
+      });
+      pdfId = await createPDF(updatedHistoryQuery);
+    }
+
+    if (filterValue === 3) {
+      pdfId = await createPDF(historyQuery);
+    }
+
     console.log(pdfId);
 
     // Create filtered table by grabbing data from the database
@@ -481,7 +510,7 @@ const ShiftHistory = () => {
       setIsTableVisible(true);
     }
 
-    const pdfURL = await pollPDFReady(pdfId);
+    pdfURL = await pollPDFReady(pdfId);
     if (pdfURL) {
       setDownloadURL(pdfURL);
       console.log("PDF is ready to download:", pdfURL);
@@ -529,7 +558,7 @@ const ShiftHistory = () => {
                 value={startDate}
                 onChange={handleStartDateChange}
               />
-              <span id="startDateSelected">{startDate}</span>
+              {/* <span id="startDateSelected">{startDate}</span> */}
             </div>
             <div className="col-lg-3 col-sm-6">
               <label htmlFor="endDate">To</label>
@@ -540,7 +569,7 @@ const ShiftHistory = () => {
                 value={endDate}
                 onChange={handleEndDateChange}
               />
-              <span id="endDateSelected">{endDate}</span>
+              {/* <span id="endDateSelected">{endDate}</span> */}
             </div>
           </div>
         </div>
