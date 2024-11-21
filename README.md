@@ -34,9 +34,10 @@ No installation required. Users need a computer and a connection to the internet
 
 #### The video below shows the web application's appearance and functionality:
 
-<video src='./images/demo-video.mp4'></video>
+https://github.com/user-attachments/assets/95d7ce00-17f9-4f8d-bab1-cfe8a224a348
 
 #### Have a look for yourself! [Shift Report Site](https://dak-shift-report.onrender.com/)
+
 
 ## Credits
 
