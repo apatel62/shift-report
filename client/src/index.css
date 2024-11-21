@@ -87,7 +87,6 @@ body {
   margin-top: 50px;
 }
 
-
 .form-custom-1 {
   width: 25%;
   margin: 0px auto;
@@ -203,7 +202,6 @@ span {
   text-align: center;
   font-size: 1rem;
   margin-top: 3.75rem;
-  /* margin: 0; */
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -235,12 +233,6 @@ span {
   background-color: var(--primary);
 }
 
-.table-custom {
-  width: 75%;
-  margin: 30px auto;
-  margin-bottom: 40px;
-}
-
 .datepicker {
   margin-top: 50px;
   color: var(--text);
@@ -256,14 +248,37 @@ label[for="endDate"] {
   height: 50%;
 }
 
-#table-title {
-  background-color: #3cb371;
-  color: var(--text);
-  border: 0px;
+.table-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#table-header {
+.table-custom {
+  border-collapse: collapse;
+  margin: 20px auto;
+}
+
+.table-custom thead td,
+.table-custom tbody td {
+  border: 1px solid #ddd;
+  padding: 15px 40px;
+  text-align: center;
+}
+
+.table-custom thead td {
+  background-color: #b8860b;
+  color: var(--text);
   font-weight: bold;
+}
+
+.table-custom tbody tr:nth-child(odd) {
+  background-color: var(--text);
+}
+
+.table-custom tbody tr:nth-child(even) {
+  background-color: #f5deb3;
 }
 
 canvas {
@@ -315,7 +330,8 @@ canvas {
     margin-top: 0px;
   }
 
-  .nav-link, .logoff {
+  .nav-link,
+  .logoff {
     font-size: 0.9rem;
   }
 
@@ -332,6 +348,11 @@ canvas {
   .form-custom-1,
   .btn-custom-1 {
     width: 60%;
+  }
+
+  .table-custom thead td,
+  .table-custom tbody td {
+    padding: 15px 30px;
   }
 }
 
@@ -353,6 +374,11 @@ canvas {
   .logoff {
     font-size: 0.7rem;
   }
+
+  .table-custom thead td,
+  .table-custom tbody td {
+    padding: 10px 25px;
+  }
 }
 
 @media (max-width: 625px) {
@@ -373,5 +399,9 @@ canvas {
   .logoff {
     font-size: 0.7rem;
   }
-  
+
+  .table-custom thead td,
+  .table-custom tbody td {
+    padding: 5px 15px;
+  }
 }
