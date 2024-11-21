@@ -13,6 +13,7 @@ function App() {
   const [isComButVisible, setIsComButVisible] = useState<boolean>(false);
   const [machineValue, setMachineValue] = useState<string>("");
   const [comments, setComments] = useState<string>("");
+  const [shiftLocked, setShiftLocked] = useState(false);
 
   const handleAddEntryPress = () => {
     setIsUpChecked(false);
@@ -23,16 +24,19 @@ function App() {
     setMachineValue("");
     setComments("");
     setShowSuccessModal(false);
+    setShiftLocked(true);
   };
 
   const handleConfirmModalPress = () => {
     setShowSuccessModal(false);
     setShowEmailModal(true);
+    setShiftLocked(false);
   };
 
   const handleEmailRequest = () => {
     sendEmail();
     setShowEmailModal(false);
+    window.location.reload();
   };
 
   return (
@@ -63,6 +67,8 @@ function App() {
             setMachineValue,
             comments,
             setComments,
+            shiftLocked,
+            setShiftLocked,
           }}
         />
       </div>
