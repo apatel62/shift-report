@@ -688,33 +688,35 @@ const ShiftHistory = () => {
         >
           View Table
         </button>
-        {/* PDF download link  */}
-        {downloadURL ? (
-          <a href="#" onClick={handlePdfDownload}>
-            Download Filtered History
-          </a>
-        ) : (
-          <p
-            className="wait-text"
-            style={{ display: isDownloadVisible ? "block" : "none" }}
+        <div className="table-section">
+          {/* PDF download link  */}
+          {downloadURL ? (
+            <a href="#" onClick={handlePdfDownload}>
+              Download Filtered History
+            </a>
+          ) : (
+            <p
+              className="wait-text"
+              style={{ display: isDownloadVisible ? "inline" : "none" }}
+            >
+              Generating PDF ...
+            </p>
+          )}
+          {/* Filtered table  */}
+          <table
+            className="table-custom"
+            style={{ display: isTableVisible ? "block" : "none" }}
           >
-            Generating PDF ...
-          </p>
-        )}
-        {/* Filtered table  */}
-        <table
-          className="table table-bordered table-custom"
-          style={{ display: isTableVisible ? "block" : "none" }}
-        >
-          <thead>
-            <tr>
-              <td>{filterText}</td>
-              <td>Machine</td>
-              <td>Parts Produced</td>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+            <thead>
+              <tr>
+                <td>{filterText}</td>
+                <td>Machine</td>
+                <td>Parts Produced</td>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </main>
     </>
   );

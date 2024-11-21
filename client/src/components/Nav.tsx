@@ -60,9 +60,11 @@ const Nav = () => {
         <h1 className="navbar-title">{getTitle()}</h1>
         <h2
           className="navbar-subtitle"
-          style={{ display: (!loginCheck && currentPage === "/") ? "block" : "none" }}
+          style={{
+            display: !loginCheck && currentPage === "/" ? "block" : "none",
+          }}
         >
-          Or Select View Production History
+          Or Select View History to View Production History
         </h2>
       </div>
       <button
