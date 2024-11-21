@@ -363,6 +363,7 @@ const ShiftHistory = () => {
     let pdfURL: string | null = null;
     let pdfId: string = "";
     setDownloadURL("");
+    setIsTableVisible(false);
     if (filteredTable) {
       filteredTable.innerHTML = "";
     }
