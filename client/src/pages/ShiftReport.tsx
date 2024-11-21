@@ -27,6 +27,8 @@ interface ModalContextType {
   setMachineValue: (value: string) => void;
   comments: string;
   setComments: (value: string) => void;
+  shiftLocked: boolean;
+  setShiftLocked: (value: boolean) => void;
 }
 
 const ShiftReport = () => {
@@ -50,7 +52,6 @@ const ShiftReport = () => {
 
   const [shiftValue, setShiftValue] = useState<number>(0);
   const [partsMade, setPartsMade] = useState("");
-  //const [comments, setComments] = useState<string>("");
 
   const [currentReportId, setCurrentReportId] = useState<number | null>(null);
 
@@ -72,6 +73,7 @@ const ShiftReport = () => {
     setMachineValue,
     comments,
     setComments,
+    shiftLocked,
   } = useOutletContext<ModalContextType>();
 
   const [loginCheck, setLoginCheck] = useState(false);
@@ -87,9 +89,6 @@ const ShiftReport = () => {
 
   useEffect(() => {
     checkLogin();
-    // if (loginCheck) {
-    //   //setReportMade(false);
-    // }
   }, []);
 
   const [loginData, setLoginData] = useState({
@@ -332,6 +331,7 @@ const ShiftReport = () => {
               aria-label=".form-select-lg example"
               value={shiftValue}
               onChange={handleShiftChange}
+              disabled={shiftLocked}
             >
               <option value={0} disabled className="select-placeholder">
                 Select shift

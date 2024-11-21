@@ -44,7 +44,6 @@ async function sendEmail() {
     console.log(emailHTML.join("\n"));
 
     const allAdmins = await getAllAdmins();
-    console.log(allAdmins);
 
     const msg = {
       to: allAdmins as string[],
