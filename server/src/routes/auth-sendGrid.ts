@@ -46,12 +46,6 @@ async function sendEmail() {
     const allAdmins = await getAllAdmins();
     console.log(allAdmins);
 
-    // const recipients = [
-    //   "arjunpatel9217@gmail.com",
-    //   "keatongreer1@gmail.com",
-    //   "desmil.co@gmail.com",
-    // ];
-
     const msg = {
       to: allAdmins as string[],
       from: "arjunpatel9217@gmail.com", // Use the email address or domain you verified above
