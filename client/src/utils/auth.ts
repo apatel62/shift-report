@@ -50,7 +50,6 @@ class AuthService {
     // set the token to localStorage
     localStorage.setItem("token", idToken);
     const decodedToken = jwtDecode<IdPayload>(idToken);
-    // console.log(decodedToken);
     const userId = decodedToken.id;
     localStorage.setItem("userId", userId);
     // redirect to the home page

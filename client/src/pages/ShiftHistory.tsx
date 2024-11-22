@@ -49,7 +49,6 @@ const ShiftHistory = () => {
         ? { ...prev, startDate: `${parsedStartDate}T06:00:00.000Z` }
         : undefined
     );
-    console.log(isValidDateFormat(e.target.value));
     if (isValidDateFormat(e.target.value) && isValidDateFormat(endDate)) {
       setIsCheckboxVisible(true);
     } else {
@@ -399,9 +398,7 @@ const ShiftHistory = () => {
     setHistoryParams(updatedParams); // Update state synchronously
 
     // Use the updatedParams directly for the API call
-    console.log(updatedParams);
     const historyQuery = await postHistory(updatedParams);
-    console.log(historyQuery);
 
     //formatting historyQuery before calling pdf Monkey API to generate the pdf
     if (filterValue === 1) {
@@ -429,8 +426,6 @@ const ShiftHistory = () => {
     if (filterValue === 3) {
       pdfId = await createPDF(historyQuery);
     }
-
-    console.log(pdfId);
 
     // Create filtered table by grabbing data from the database
     setIsDownloadVisible(true);
@@ -514,7 +509,6 @@ const ShiftHistory = () => {
     pdfURL = await pollPDFReady(pdfId);
     if (pdfURL) {
       setDownloadURL(pdfURL);
-      console.log("PDF is ready to download:", pdfURL);
     }
   };
 
@@ -524,7 +518,6 @@ const ShiftHistory = () => {
 
     await new Promise((resolve) => setTimeout(resolve, retryDelay)); // Wait before starting to check
     for (let attempt = 0; attempt < maxRetries; attempt++) {
-      console.log(`Checking PDF readiness (attempt ${attempt + 1})...`);
       const pdfURL = await getPDF(pdfId);
 
       if (pdfURL) {

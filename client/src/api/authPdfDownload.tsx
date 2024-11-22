@@ -9,7 +9,6 @@ const getPDF = async (id: string) => {
     });
 
     const result = await response.json();
-    console.log(result);
     return result;
   } catch (error) {
     console.error("Error calling pdf Monkey API:", error);

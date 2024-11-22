@@ -2,7 +2,7 @@ import { UserLogin } from "../interfaces/UserLogin";
 
 const login = async (userInfo: UserLogin) => {
   // make a POST request to the login route
-  const respsone = await fetch("/auth/login", {
+  const response = await fetch("/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -10,8 +10,7 @@ const login = async (userInfo: UserLogin) => {
     body: JSON.stringify(userInfo),
   });
 
-  const user = await respsone.json();
-  console.log("User: ", user);
+  const user = await response.json();
   return user;
 };
 
