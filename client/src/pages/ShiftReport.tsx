@@ -81,7 +81,6 @@ const ShiftReport = () => {
 
   const checkLogin = () => {
     const isLoggedIn = auth.loggedIn();
-    console.log(`Login Successful: ${isLoggedIn}`);
     if (isLoggedIn) {
       setLoginCheck(true);
     }
@@ -111,7 +110,6 @@ const ShiftReport = () => {
     e.preventDefault();
     try {
       const data = await login(loginData);
-      //console.log(`trying data: ${data}`);
       if (data.token) {
         auth.login(data.token);
       } else {

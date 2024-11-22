@@ -41,7 +41,6 @@ async function sendEmail() {
       `<h1 style = "font-weight: 400">${dateFormatted} Shift ${shiftReport?.shiftNumber} Report</h1>`,
       ...machinesEmail,
     ];
-    console.log(emailHTML.join("\n"));
 
     const allAdmins = await getAllAdmins();
 

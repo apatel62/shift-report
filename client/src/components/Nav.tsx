@@ -15,7 +15,6 @@ const Nav = () => {
 
   useEffect(() => {
     checkLogin();
-    console.log(`NavBar: ${loginCheck}`);
   }, [loginCheck]);
 
   const handleLogoffSubmit = () => {
@@ -27,7 +26,7 @@ const Nav = () => {
       return "Report History";
     } else if (currentPage === "/") {
       if (!loginCheck) {
-        return "Login to Create a Shift History Report";
+        return "Login to Create a Shift Report";
       } else {
         return "Report";
       }

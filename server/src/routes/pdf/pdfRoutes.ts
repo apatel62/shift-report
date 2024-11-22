@@ -3,45 +3,42 @@ import { Router, Request, Response } from "express";
 const router = Router();
 
 async function createPDF(machineData: string[]) {
-    try {
-        const response = await fetch(
-          "https://api.pdfmonkey.io/api/v1/documents",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${process.env.PDF_API_KEY}`,
-            },
-            body: JSON.stringify({
-              document: {
-              document_template_id: process.env.DOCUMENT_TEMPLATE_ID, // Template ID
-              status: "pending",
-              payload: {
-                shiftTitle: 'Filtered Shift History',
-                machineData
-              },
-              meta: {
-                _filename: "filtered_history.pdf", // Desired filename of the generated PDF
-              },
-            }}),
-          }
-        );
-  
-        if (!response.ok) {
-          const errorDetails = await response.json();
-          console.error("Error from PDF Monkey API:", errorDetails);
-          throw new Error(`PDF Monkey API error: ${response.status}`);
-        }
-        const result = await response.json();
-        return result.document.id;
-      } catch (error) {
-        console.error("Error generating PDF:", error);
-        throw error;
-      }
- }
+  try {
+    const response = await fetch("https://api.pdfmonkey.io/api/v1/documents", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.PDF_API_KEY}`,
+      },
+      body: JSON.stringify({
+        document: {
+          document_template_id: process.env.DOCUMENT_TEMPLATE_ID, // Template ID
+          status: "pending",
+          payload: {
+            shiftTitle: "Filtered Shift History",
+            machineData,
+          },
+          meta: {
+            _filename: "filtered_history.pdf", // Desired filename of the generated PDF
+          },
+        },
+      }),
+    });
 
- async function getPDF(id: string) {
-  console.log(id);
+    if (!response.ok) {
+      const errorDetails = await response.json();
+      console.error("Error from PDF Monkey API:", errorDetails);
+      throw new Error(`PDF Monkey API error: ${response.status}`);
+    }
+    const result = await response.json();
+    return result.document.id;
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    throw error;
+  }
+}
+
+async function getPDF(id: string) {
   try {
     const response = await fetch(
       `https://api.pdfmonkey.io/api/v1/documents/${id}`,
@@ -68,7 +65,7 @@ async function createPDF(machineData: string[]) {
     console.error("Request failed:", error);
     throw error; // Rethrow error if needed
   }
- }
+}
 
 router.post("/create", async (req: Request, res: Response) => {
   try {
@@ -79,7 +76,6 @@ router.post("/create", async (req: Request, res: Response) => {
     return;
   }
 });
-
 
 router.post("/get", async (req: Request, res: Response) => {
   try {
