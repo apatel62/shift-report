@@ -8,9 +8,7 @@ const sendEmail = async () => {
     });
 
     const result = await response.json();
-    if (result.success) {
-      console.log("Email sent successfully:", result.data);
-    } else {
+    if (!result.success) {
       console.error("Failed to send email:", result.message);
     }
   } catch (error) {
