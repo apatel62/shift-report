@@ -26,9 +26,13 @@ Below are screenshots of our project.
 
 ![Website View History Screenshot](/images/history.png)
 
+#### Here's the link to our project presentation: [Presentation](https://docs.google.com/presentation/d/1GSXnY6Al5yUVaayPNQpdUfn_UYgviRMi5mYfYsU3rEM/edit?usp=sharing)
+
 ## Installation
 
 No installation required. Users need a computer and a connection to the internet.
+
+To run the code locally, you will have a .env file inside the server folder. The variables needed are: DB_NAME, DB_PASSWORD, DB_USER, DOCUMENT_TEMPLATE_ID, JWT_SECRET_KEY, PDF_API_KEY, and SENDGRID_API_KEY. The DB variables are your local Postgres credentials. JWT_SECRET_KEY can be assigned any string. DOCUMENT_TEMPLATE_ID and PDF_API_KEY are the credentials from pdf Monkey which is the API we used to generate a pdf in the history section. SENDGRID_API_KEY is the sendGrid API that we used to send an email that summarizes the recent report created.
 
 ## Usage
 
