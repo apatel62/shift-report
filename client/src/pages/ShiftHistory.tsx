@@ -579,7 +579,7 @@ const ShiftHistory = () => {
           className="filter-checkbox"
           style={{ display: isCheckboxVisible ? "block" : "none" }}
         >
-          <h2>Fitler by machine:</h2>
+          <h2>Filter by machine:</h2>
           <div className="form-check form-check-inline">
             <input
               className="form-check-input"
