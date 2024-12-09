@@ -135,9 +135,10 @@ const ShiftReport = () => {
 
     const currentDate = new Date();
     const year = currentDate.getFullYear();
-    const month = currentDate.getMonth() + 1; // Adding 1 to make it 1-indexed
-    const day = currentDate.getDate();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getDate().toString().padStart(2, "0");
     const finalformattedDate = `${year}-${month}-${day}T06:00:00.000Z`;
+    console.log(finalformattedDate);
     setNewReport((prev) =>
       prev
         ? {
@@ -255,6 +256,7 @@ const ShiftReport = () => {
 
       // create a report if necessary
       if (newReport && !reportId) {
+        console.log(newReport);
         const createdReport = await createReport(newReport);
         if (createdReport && createdReport.id !== undefined) {
           reportId = createdReport.id;

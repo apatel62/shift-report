@@ -55,7 +55,6 @@ const createReport = async (body: ReportData) => {
       body: JSON.stringify(body),
     });
     const data = response.json();
-
     if (!response.ok) {
       throw new Error("invalid API response, check network tab!");
     }
